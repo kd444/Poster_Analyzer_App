@@ -1,3 +1,4 @@
+// App.js
 import { BrowserRouter } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./components/HomePage";
@@ -12,11 +13,11 @@ const App = () => {
         <BrowserRouter>
             <Navbar />
             <Routes>
-                <Route path="/" exact component={HomePage} />
-                <Route path="/upload" component={UploadPage} />
-                <Route path="/analytics" component={AnalyticsPage} />
-                <Route path="/report" component={ReportPage} />
-                <Route path="/feedback" component={FeedbackPage} />
+                <Route path="/" exact element={<HomePage />} />
+                <Route path="/upload" element={<UploadPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/report" element={<ReportPage />} />
+                <Route path="/feedback" element={<FeedbackPage />} />
             </Routes>
         </BrowserRouter>
     );
