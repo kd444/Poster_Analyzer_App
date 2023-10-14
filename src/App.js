@@ -1,11 +1,10 @@
-// App.js
 import { BrowserRouter } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import HomePage from "./components/HomePage";
-import UploadPage from "./components/UploadPage";
-import AnalyticsPage from "./components/AnalyticsPage";
-import ReportPage from "./components/ReportPage";
-import FeedbackPage from "./components/FeedbackPage";
+import Navbar from "./components/Navbar/Navbar";
+import HomePage from "./components/HomePage/HomePage";
+import UploadPage from "./components/UploadPage/UploadPage";
+import AnalyticsPage from "./components/AnalyticsPage/AnalyticsPage";
+import ReportPage from "./components/ReportPage/ReportPage";
+import FeedbackPage from "./components/FeedbackPage/FeedbackPage";
 import { Route, Routes } from "react-router-dom";
 
 const App = () => {

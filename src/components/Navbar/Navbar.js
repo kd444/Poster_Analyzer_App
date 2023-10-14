@@ -1,8 +1,6 @@
-// import { ReactComponent as Brand } from "../../assets/icons/logo.svg";
-import logo from "../poster.png";
+import logo from "./poster.png";
 import "./navbar.css";
 import { NavLink } from "react-router-dom";
-// -
 
 const Navbar = () => {
     return (
@@ -11,11 +9,8 @@ const Navbar = () => {
                 <div className="logo">
                     <img src={logo} alt="Logo" width="30" height="30" />
                 </div>
-                <div className="label">
-                    <div className="poster-insights">
-                        Poster
-                        <br /> Insights
-                    </div>
+                <div className="label poster-insights">
+                    Poster <br /> Insights
                 </div>
                 <div className="nav-elements">
                     <ul>

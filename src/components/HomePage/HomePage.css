@@ -1,0 +1,58 @@
+.home-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffa72652;
+    padding: 20px;
+}
+
+.left-section {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-right: 20px;
+    flex: 1;
+}
+
+.left-section h1 {
+    font-size: 36px;
+}
+
+.left-section p {
+    font-size: 18px;
+}
+
+.left-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.left-section li {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.right-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.right-section img {
+    max-width: 100%; /* Set maximum width to prevent the image from exceeding its container */
+    max-height: 80vh; /* Set maximum height to control the image's height */
+    height: auto;
+    width: auto;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+footer p {
+    font-size: 14px;
+}
