@@ -16,6 +16,11 @@ const UploadPage = () => {
         setFile(file);
     };
 
+    const handleFileInput = (event) => {
+        const file = event.target.files[0];
+        setFile(file);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -49,6 +54,7 @@ const UploadPage = () => {
             <div className="card">
                 <div className="card-content">
                     <div className="upload-area">
+                        <h3>Drop files here to upload</h3>
                         <div
                             className={`drop-target ${
                                 file ? "file-dropped" : ""
@@ -63,6 +69,12 @@ const UploadPage = () => {
                             )}
                         </div>
                     </div>
+
+                    <div className="choose-file-area">
+                        <label>Choose File</label>
+                        <input type="file" onChange={handleFileInput} />
+                    </div>
+
                     <div className="uploaded-files-list">
                         {uploadedFiles.length > 0 && renderUploadedFilesList()}
                     </div>

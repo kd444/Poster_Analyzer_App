@@ -69,3 +69,19 @@ button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
+
+/* CSS for the new Choose File button */
+
+.choose-file-area {
+    margin-top: 20px;
+}
+
+.choose-file-area label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.choose-file-area input {
+    border: 1px solid gray;
+    padding: 10px;
+}
