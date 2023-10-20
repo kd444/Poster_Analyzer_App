@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./UploadPage.css";
+import api from "../../api/api";
 
 const UploadPage = () => {
     const [file, setFile] = useState(null);
@@ -12,7 +13,7 @@ const UploadPage = () => {
 
     const handleDrop = (event) => {
         event.preventDefault();
-        const file = event.target.files[0];
+        const file = event.dataTransfer.files[0];
         setFile(file);
     };
 
@@ -20,21 +21,42 @@ const UploadPage = () => {
         const file = event.target.files[0];
         setFile(file);
     };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        // TODO: Implement backend integration to upload the file
-
+    const handleUpload = async () => {
         setIsUploading(true);
-        // TODO: Implement backend integration to initiate the analysis process
 
-        // Once the analysis process is complete, update the uploadedFiles state with the results
-        setUploadedFiles([
-            ...uploadedFiles,
-            { name: file.name, results: "..." },
-        ]);
+        try {
+            const response = await api.uploadPoster(file);
+
+            if (response.status === 201) {
+                // Upload was successful
+                // Start the analysis process
+                await api.startAnalysis();
+
+                // Once the analysis process is complete, update the uploadedFiles state with the results
+                const results = await api.getContentSummary();
+
+                setUploadedFiles([
+                    ...uploadedFiles,
+                    { name: file.name, results },
+                ]);
+            } else {
+                // Upload failed
+                console.error(response.data);
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+
         setIsUploading(false);
+    };
+
+    const handleAnalyze = async () => {
+        try {
+            // Start the analysis process
+            await api.startAnalysis();
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
     };
 
     const renderUploadedFilesList = () => {
@@ -78,13 +100,23 @@ const UploadPage = () => {
                     <div className="uploaded-files-list">
                         {uploadedFiles.length > 0 && renderUploadedFilesList()}
                     </div>
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={isUploading}
-                    >
-                        {isUploading ? "Analyzing..." : "Analyze Poster"}
-                    </button>
+
+                    <div className="upload-buttons-area">
+                        <button
+                            type="button"
+                            onClick={handleUpload}
+                            disabled={isUploading || !file}
+                        >
+                            Upload Poster
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleAnalyze}
+                            disabled={isUploading || !file}
+                        >
+                            Analyze Poster
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
