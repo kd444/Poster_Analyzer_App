@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import "./UploadPage.css";
 import api from "../../api/api";
 
+import Alert from "../Alert/Alert";
+
 const UploadPage = () => {
     const [file, setFile] = useState(null);
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
+    const [response, setResponse] = useState(null);
 
     const handleDragOver = (event) => {
         event.preventDefault();
@@ -21,28 +24,13 @@ const UploadPage = () => {
         const file = event.target.files[0];
         setFile(file);
     };
+
     const handleUpload = async () => {
         setIsUploading(true);
 
         try {
             const response = await api.uploadPoster(file);
-
-            if (response.status === 201) {
-                // Upload was successful
-                // Start the analysis process
-                await api.startAnalysis();
-
-                // Once the analysis process is complete, update the uploadedFiles state with the results
-                const results = await api.getContentSummary();
-
-                setUploadedFiles([
-                    ...uploadedFiles,
-                    { name: file.name, results },
-                ]);
-            } else {
-                // Upload failed
-                console.error(response.data);
-            }
+            setResponse(response);
         } catch (error) {
             console.error("An error occurred:", error);
         }
@@ -52,8 +40,8 @@ const UploadPage = () => {
 
     const handleAnalyze = async () => {
         try {
-            // Start the analysis process
-            await api.startAnalysis();
+            const response = await api.startAnalysis();
+            setResponse(response);
         } catch (error) {
             console.error("An error occurred:", error);
         }
@@ -117,6 +105,8 @@ const UploadPage = () => {
                             Analyze Poster
                         </button>
                     </div>
+
+                    {response && <Alert message={response.message} />}
                 </div>
             </div>
         </div>

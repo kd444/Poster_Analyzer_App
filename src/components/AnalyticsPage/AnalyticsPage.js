@@ -1,14 +1,29 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./AnalyticsPage.css";
-
+import api from "../../api/api";
+import { useEffect } from "react";
 const ImageQuality = () => {
     const [imageQuality, setImageQuality] = useState(0);
+    const [reportContent, setReportContent] = useState("");
+
+    useEffect(() => {
+        async function fetchData() {
+            const report = await api.getReport();
+            if (report) {
+                setImageQuality(report.imageQuality);
+                setReportContent(report.reportContent);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     return (
         <div className="image-quality">
             <h3>Image Quality</h3>
             <p>Image quality: {imageQuality}</p>
+            <p>Report: {reportContent}</p>
         </div>
     );
 };
@@ -56,6 +71,28 @@ const AccessibilityInsights = () => {
     );
 };
 
+const ExtractedText = () => {
+    const [extractedText, setExtractedText] = useState("");
+
+    useEffect(() => {
+        async function fetchData() {
+            const report = await api.getReport();
+            if (report) {
+                setExtractedText(report.extractedText);
+            }
+        }
+
+        fetchData();
+    }, []);
+
+    return (
+        <div className="extracted-text">
+            <h3>Extracted Text</h3>
+            <p>{extractedText}</p>
+        </div>
+    );
+};
+
 const AnalyticsPage = () => {
     const [currentComponent, setCurrentComponent] = useState(0);
 
@@ -64,6 +101,7 @@ const AnalyticsPage = () => {
         <ContentSummary />,
         <LinkValidation />,
         <AccessibilityInsights />,
+        <ExtractedText />,
     ];
 
     const handleNextComponent = () => {
