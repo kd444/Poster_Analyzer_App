@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "@mdi/font/css/materialdesignicons.css";
+import api from "../../api/api";
 
 const ReportPage = () => {
     const handleShareClick = () => {

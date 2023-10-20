@@ -9,6 +9,14 @@ const UploadPage = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
     const [response, setResponse] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const renderLoader = () => {
+        return (
+            <div className="loader">
+                <div className="spinner"></div>
+            </div>
+        );
+    };
 
     const handleDragOver = (event) => {
         event.preventDefault();
