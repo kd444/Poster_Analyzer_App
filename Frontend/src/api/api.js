@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const BASE_URL = "http://localhost:8000/api/";
+const BASE_URL = "http://3.110.179.7:8000/api/";
 
 const api = {
     async uploadPoster(file) {

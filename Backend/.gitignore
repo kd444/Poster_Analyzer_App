@@ -1,0 +1,13 @@
+# Ignore the virtual environment directory
+env/
+
+# Ignore the database file
+poster_insights_backend/db.sqlite3
+
+# Ignore media files (user-uploaded content)
+media_root/
+
+# Ignore any compiled Python files and cache directories
+*.pyc
+__pycache__/
+poster_insights_backend/db.sqlite3
