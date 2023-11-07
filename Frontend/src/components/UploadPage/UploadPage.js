@@ -117,14 +117,6 @@ const UploadPage = () => {
         setIsUploading(false);
     };
 
-    const handleAnalyze = async () => {
-        try {
-            const response = await api.startAnalysis();
-            setResponse(response);
-        } catch (error) {
-            console.error("An error occurred:", error);
-        }
-    };
     const renderUploadedFilesList = () => {
         return (
             <ul>
