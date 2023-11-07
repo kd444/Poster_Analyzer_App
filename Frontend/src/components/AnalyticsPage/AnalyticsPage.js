@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./AnalyticsPage.css";
 import api from "../../api/api";
+import ColorAnalysisTable from "./ColorAnalysisTable/ColorAnalysisTable";
 
 import PieChart from "./PieChart/PieChart";
 
@@ -16,32 +17,17 @@ const AnalyticsPage = () => {
     const [currentTab, setCurrentTab] = useState(tabs[0]);
     const [reportData, setReportData] = useState({});
     const [pieChartColors, setPieChartColors] = useState([]); // Data for pie chart
-
-    useEffect(() => {
-        async function fetchData() {
-            const report = await api.getReport();
-            if (report && report.report) {
-                setReportData(report);
-
-                // Extract colors from Color Analysis for the pie chart
-                const colorAnalysis = report.report.find(
-                    (section) =>
-                        section.sectionName === "Accessibility Insights"
-                )?.data["Color Analysis"];
-                if (colorAnalysis) {
-                    const colorRelevanceMeasure =
-                        colorAnalysis["Color Relevance Measure"];
-                    setPieChartColors(
-                        colorRelevanceMeasure === "High"
-                            ? ["Red", "Green", "Blue"]
-                            : ["Gray", "Black"]
-                    );
-                }
-            }
+    async function fetchData() {
+        const report = await api.getReport();
+        if (report && report.report) {
+            setReportData(report);
         }
-
-        fetchData();
-    }, []);
+    }
+    useEffect(() => {
+        if (Object.keys(reportData).length === 0) {
+            fetchData();
+        }
+    }, [reportData]);
 
     return (
         <div className="analytics-page">
@@ -66,7 +52,9 @@ const AnalyticsPage = () => {
                 {currentTab === "Extracted Text" && reportData.report && (
                     <div className="extracted-text">
                         <h3>Extracted Text</h3>
-                        <p>{reportData.report[1]?.data[0]}</p>
+                        <p className="extracted-text-content">
+                            {reportData.report[1]?.data[0]}
+                        </p>
                     </div>
                 )}
                 {currentTab === "Link Validation" && reportData.report && (
@@ -171,6 +159,11 @@ const AnalyticsPage = () => {
                         </div>
                         <div className="accessibility-section">
                             <h4>Color Analysis</h4>
+                            <div className="accessibility-section">
+                                <ColorAnalysisTable
+                                    data={reportData.report[5]?.data}
+                                />
+                            </div>
                             <table>
                                 <tbody>
                                     <tr>
@@ -200,7 +193,7 @@ const AnalyticsPage = () => {
             </div>
             {currentTab === "Accessibility Insights" && (
                 <div className="pie-chart">
-                    <PieChart colors={pieChartColors} />
+                    {/* <PieChart colors={pieChartColors} /> */}
                 </div>
             )}
             <Link to="/report">

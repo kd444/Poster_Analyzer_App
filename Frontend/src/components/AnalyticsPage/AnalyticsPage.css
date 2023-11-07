@@ -47,3 +47,8 @@
 .pie-chart {
     text-align: center;
 }
+
+.extracted-text-content {
+    max-height: 400px; /* Adjust the maximum height as needed */
+    overflow: auto; /* Add a scrollbar when the content exceeds the maximum height */
+}
