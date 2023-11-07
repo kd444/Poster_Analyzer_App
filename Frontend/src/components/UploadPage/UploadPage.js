@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import "./UploadPage.css";
 import api from "../../api/api";
-
 import Alert from "../Alert/Alert";
+import * as pdfjsLib from "pdfjs-dist";
+import "pdfjs-dist/build/pdf.worker";
+// set up worker
+// pdfjsLib.GlobalWorkerOptions.workerSrc =
+//     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.0.279/pdf.worker.min.js";
 
 const UploadPage = () => {
     const [file, setFile] = useState(null);
@@ -10,13 +14,7 @@ const UploadPage = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
-    const renderLoader = () => {
-        return (
-            <div className="loader">
-                <div className="spinner"></div>
-            </div>
-        );
-    };
+    const [fileType, setFileType] = useState(null);
 
     const handleDragOver = (event) => {
         event.preventDefault();
@@ -24,21 +22,90 @@ const UploadPage = () => {
 
     const handleDrop = (event) => {
         event.preventDefault();
-        const file = event.dataTransfer.files[0];
-        setFile(file);
+        const droppedFile = event.dataTransfer.files[0];
+        handleFileSelection(droppedFile);
     };
 
     const handleFileInput = (event) => {
-        const file = event.target.files[0];
-        setFile(file);
+        const selectedFile = event.target.files[0];
+        handleFileSelection(selectedFile);
+    };
+
+    const handleFileSelection = async (selectedFile) => {
+        if (selectedFile) {
+            let pdfImages = [];
+            if (selectedFile.type === "application/pdf") {
+                // Handle PDF file
+
+                const pdf = await pdfjsLib.getDocument(
+                    URL.createObjectURL(selectedFile)
+                ).promise;
+
+                for (
+                    let pageNumber = 1;
+                    pageNumber <= pdf.numPages;
+                    pageNumber++
+                ) {
+                    const page = await pdf.getPage(pageNumber);
+                    const viewport = page.getViewport({ scale: 2 });
+                    const canvas = document.createElement("canvas");
+                    const canvasContext = canvas.getContext("2d");
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const renderContext = {
+                        canvasContext,
+                        viewport,
+                    };
+
+                    const renderTask = page.render(renderContext);
+                    await renderTask.promise;
+
+                    // Convert canvas content to base64 image data URL
+                    const imageDataURL = canvas.toDataURL("image/png");
+
+                    pdfImages.push(imageDataURL);
+                }
+
+                setFile(pdfImages);
+                setFileType("pdf");
+            } else if (selectedFile.type.startsWith("image/")) {
+                // Handle image file
+                setFile(selectedFile);
+                setFileType("image");
+            }
+        }
+    };
+
+    // Helper function to convert a data URL to a Blob
+    const dataURLToBlob = (dataURL) => {
+        const arr = dataURL.split(",");
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
     };
 
     const handleUpload = async () => {
         setIsUploading(true);
 
         try {
-            const response = await api.uploadPoster(file);
-            setResponse(response);
+            if (fileType === "pdf") {
+                // Handle PDF images upload
+                const inputFile = file;
+                const blob = dataURLToBlob(inputFile[0]);
+                const response = await api.uploadPoster(blob);
+                setUploadedFiles([...uploadedFiles, response]);
+            } else if (fileType === "image") {
+                // Handle image upload
+                const response = await api.uploadPoster(file);
+                setResponse(response);
+            }
+            setResponse(null);
         } catch (error) {
             console.error("An error occurred:", error);
         }
@@ -103,14 +170,7 @@ const UploadPage = () => {
                             onClick={handleUpload}
                             disabled={isUploading || !file}
                         >
-                            Upload Poster
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleAnalyze}
-                            disabled={isUploading || !file}
-                        >
-                            Analyze Poster
+                            Upload & Analyze
                         </button>
                     </div>
 
