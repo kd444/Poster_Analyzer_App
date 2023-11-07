@@ -67,11 +67,17 @@ const UploadPage = () => {
                     pdfImages.push(imageDataURL);
                 }
 
-                setFile(pdfImages);
-                setFileType("pdf");
+                setFile({
+                    file: pdfImages,
+                    name: selectedFile.name,
+                });
+                setFileType("pdf"); // Set file type to PDF
             } else if (selectedFile.type.startsWith("image/")) {
                 // Handle image file
-                setFile(selectedFile);
+                setFile({
+                    file: selectedFile,
+                    name: selectedFile.name,
+                });
                 setFileType("image");
             }
         }
@@ -95,14 +101,14 @@ const UploadPage = () => {
 
         try {
             if (fileType === "pdf") {
-                // Handle PDF images upload
-                const inputFile = file;
+                // Handle PDF images
+                const inputFile = file.file;
                 const blob = dataURLToBlob(inputFile[0]);
                 const response = await api.uploadPoster(blob);
                 setUploadedFiles([...uploadedFiles, response]);
             } else if (fileType === "image") {
                 // Handle image upload
-                const response = await api.uploadPoster(file);
+                const response = await api.uploadPoster(file.file);
                 setResponse(response);
             }
             setResponse(null);
