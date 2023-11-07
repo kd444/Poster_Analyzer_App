@@ -30,42 +30,40 @@ const UploadPage = () => {
         const selectedFile = event.target.files[0];
         handleFileSelection(selectedFile);
     };
+    const convertPDFToImages = async (pdfFile) => {
+        const pdfImages = [];
 
+        const pdf = await pdfjsLib.getDocument(URL.createObjectURL(pdfFile))
+            .promise;
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            const page = await pdf.getPage(pageNumber);
+            const viewport = page.getViewport({ scale: 2 });
+            const canvas = document.createElement("canvas");
+            const canvasContext = canvas.getContext("2d");
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext,
+                viewport,
+            };
+
+            const renderTask = page.render(renderContext);
+            await renderTask.promise;
+
+            // Convert canvas content to base64 image data URL
+            const imageDataURL = canvas.toDataURL("image/png");
+
+            pdfImages.push(imageDataURL);
+        }
+
+        return pdfImages;
+    };
     const handleFileSelection = async (selectedFile) => {
         if (selectedFile) {
-            let pdfImages = [];
             if (selectedFile.type === "application/pdf") {
-                // Handle PDF file
-
-                const pdf = await pdfjsLib.getDocument(
-                    URL.createObjectURL(selectedFile)
-                ).promise;
-
-                for (
-                    let pageNumber = 1;
-                    pageNumber <= pdf.numPages;
-                    pageNumber++
-                ) {
-                    const page = await pdf.getPage(pageNumber);
-                    const viewport = page.getViewport({ scale: 2 });
-                    const canvas = document.createElement("canvas");
-                    const canvasContext = canvas.getContext("2d");
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    const renderContext = {
-                        canvasContext,
-                        viewport,
-                    };
-
-                    const renderTask = page.render(renderContext);
-                    await renderTask.promise;
-
-                    // Convert canvas content to base64 image data URL
-                    const imageDataURL = canvas.toDataURL("image/png");
-
-                    pdfImages.push(imageDataURL);
-                }
+                const pdfImages = await convertPDFToImages(selectedFile);
 
                 setFile({
                     file: pdfImages,
