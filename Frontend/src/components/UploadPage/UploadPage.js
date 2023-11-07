@@ -121,12 +121,11 @@ const UploadPage = () => {
             console.error("An error occurred:", error);
         }
     };
-
     const renderUploadedFilesList = () => {
         return (
             <ul>
-                {uploadedFiles.map((file) => (
-                    <li key={file.name}>
+                {uploadedFiles.map((file, index) => (
+                    <li key={index}>
                         {file.name} - {file.results}
                     </li>
                 ))}
