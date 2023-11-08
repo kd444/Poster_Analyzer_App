@@ -4,7 +4,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import api from "../../api/api";
 
 const ReportPage = () => {
-    const [loading, setLoading] = useState(false);
+    const [downloading, setDownloading] = useState(false);
 
     const handleShareClick = () => {
         // Open Outlook app to share the report
@@ -12,7 +12,7 @@ const ReportPage = () => {
     };
 
     const handleDownloadPDFReport = async () => {
-        setLoading(true); // Set loading to true
+        setDownloading(true); // Set downloading to true
 
         try {
             const pdfBlob = await api.downloadPDFReport();
@@ -30,7 +30,7 @@ const ReportPage = () => {
         } catch (error) {
             console.error("Error downloading PDF report:", error);
         } finally {
-            setLoading(false);
+            setDownloading(false);
         }
     };
 
@@ -55,7 +55,7 @@ const ReportPage = () => {
                     Feedback
                 </button>
             </div>
-            {loading && <div className="loader">Loading...</div>}
+            {downloading && <div className="loader">Downloading...</div>}
         </div>
     );
 };
