@@ -37,17 +37,17 @@ The React app should now be running on [http://localhost:3000](http://localhost:
 
 ### Backend
 
-1.Open another terminal window and navigate to the Backend folder:
+1. Open another terminal window and navigate to the Backend folder:
 ```
 cd Backend
 ```
 
-2.Create a virtual environment (optional but recommended):
+2. Create a virtual environment (optional but recommended):
 ```
 python -m venv venv
 ```
 
-3.Activate the virtual environment:
+3. Activate the virtual environment:
   On Windows:
 ```
 .\venv\Scripts\activate
@@ -62,12 +62,17 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Apply migrations:
+5. Navigate to the `poster_insights_backend` folder:
+ ```
+cd poster_insights_backend
+```  
+
+6. Apply migrations:
 ```
 python manage.py migrate
 ```
 
-6.Start the Django development server:
+7. Start the Django development server:
 ```
 python manage.py runserver
 ```
