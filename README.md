@@ -7,12 +7,6 @@ The Poster Insights is a web-based application designed to analyze poster images
 
 
 
-## URL
-
-The frontend of this project is hosted on Firebase at the following URL:
-[https://poster-insights.firebaseapp.com](https://poster-insights.firebaseapp.com)
-
-
 ## Prerequisites
 
 Ensure that you have the following dependencies installed:
